@@ -2,7 +2,6 @@ module DelayedJobShimForResque
   class MethodProxy
     def initialize(target, options)
       @target = target
-      # Not yet implemented
       @options = options
     end
 
@@ -12,9 +11,12 @@ module DelayedJobShimForResque
       queue = @options[:to] || :default
       # Encode our Performable Method into something that can be stored in Resque
       payload = PerformableMethod.encode(@target, method, args)
-      # Skip Resque.enqueue convenience method and create the job ourselves.
-      # Point to the PerformableMethod class (which Resque will call perform on)
-      ::Resque::Job.create(queue, PerformableMethod, payload)
+
+      if @options[:run_at]
+        ::Resque::enqueue_at_with_queue(queue, PerformableMethod, payload)
+      else
+        ::Resque::enqueue_to(queue, PerformableMethod, payload)
+      end
     end
   end
 
