@@ -1,12 +1,20 @@
 module DelayedJobShimForResque
   class PerformableMethod
     def self.perform(payload)
-      target = payload["klass"].constantize.find(payload["id"])
+      klass = payload["klass"].constantize
+      if payload.include? "id"
+        target = klass.find(payload["id"])
+      else
+        target = klass
+      end
       target.send payload["method"], *payload["args"]
     end
 
-    def self.encode(target, method, args)
-      {:klass => target.class.name, :id => target.id, :method => method, :args => args}
+    def self.prepare(target, method, args)
+      klass = (target.class.name == 'Class') ? target.name : target.class.name
+      hash = {:klass => klass, :method => method, :args => args}
+      hash[:id] = target.id if target.class.name != 'Class'
+      hash
     end
   end
 end

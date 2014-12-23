@@ -10,12 +10,12 @@ module DelayedJobShimForResque
       # This is the Resque queue to which this job will be sent
       queue = @options[:to] || :default
       # Encode our Performable Method into something that can be stored in Resque
-      payload = PerformableMethod.encode(@target, method, args)
+      payload = PerformableMethod.prepare(@target, method, args)
 
       if @options[:run_at]
-        ::Resque::enqueue_at_with_queue(queue, PerformableMethod, payload)
+        ::Resque.enqueue_at_with_queue(queue, @options[:run_at], PerformableMethod, payload)
       else
-        ::Resque::enqueue_to(queue, PerformableMethod, payload)
+        ::Resque.enqueue_to(queue, PerformableMethod, payload)
       end
     end
   end
