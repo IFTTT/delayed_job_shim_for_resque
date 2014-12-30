@@ -24,4 +24,5 @@ Gem::Specification.new do |spec|
   spec.requirements << "These requirements are not listed as dependencies, as this is a shim gem and meant to be removed"
   spec.requirements << "resque at approximately 1.24.1"
   spec.requirements << "resque-scheduler at approximately 2.2.0"
+  spec.requirements << "resque-retry at approximately 1.0.0"
 end

@@ -1,5 +1,7 @@
 module DelayedJobShimForResque
   class PerformableMethod
+    extend Resque::Plugins::ExponentialBackoff
+
     def self.perform(payload)
       klass = payload["klass"].constantize
       if payload.include? "id"
