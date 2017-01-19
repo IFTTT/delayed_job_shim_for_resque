@@ -2,6 +2,9 @@
 
 Shims Delayed Job's delay and handle_asynchronously methods into Resque
 
+## Deprecated
+This project is not being developed. Feel free to fork!
+
 ## Installation
 
 Add this line to your application's Gemfile:
